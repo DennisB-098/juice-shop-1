@@ -169,7 +169,7 @@ void collectDurationPromise('validatePreconditions', validatePreconditions)()
 void collectDurationPromise('cleanupFtpFolder', cleanupFtpFolder)()
 void collectDurationPromise('validateConfig', validateConfig)({})
 
-function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
+function configureApp(app: ReturnType<typeof express>, seq: typeof sequelize) {
   /* Locals */
   app.locals.captchaId = 0
   app.locals.captchaReqId = 1
@@ -344,7 +344,7 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
   app.post('/rest/memories', uploadToDisk.single('image'), ensureFileIsPassed, security.appendUserId(), metrics.observeFileUploadMetricsMiddleware(), utils.asyncHandler(addMemory()))
 
   app.use(express.text({ type: '*/*' }))
-  app.use(function jsonParser (req: Request, res: Response, next: NextFunction) {
+  app.use(function jsonParser(req: Request, res: Response, next: NextFunction) {
     // @ts-expect-error FIXME intentionally saving original request in this property
     req.rawBody = req.body
     if (req.headers['content-type']?.includes('application/json')) {
@@ -375,7 +375,7 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
   app.use('/rest/user/reset-password', rateLimit({
     windowMs: 5 * 60 * 1000,
     max: 100,
-    keyGenerator ({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge
+    keyGenerator({ headers, ip }: { headers: any, ip: any }) { return headers['X-Forwarded-For'] ?? ip } // vuln-code-snippet vuln-line resetPasswordMortyChallenge
   }))
   // vuln-code-snippet end resetPasswordMortyChallenge
 
@@ -398,8 +398,10 @@ function configureApp (app: ReturnType<typeof express>, seq: typeof sequelize) {
     .put(security.denyAll())
     .delete(security.denyAll())
   /* Products: Only GET is allowed in order to view products */ // vuln-code-snippet neutral-line changeProductChallenge
-  app.post('/api/Products', security.isAuthorized()) // vuln-code-snippet neutral-line changeProductChallenge
+  //app.post('/api/Products', security.isAuthorized()) // vuln-code-snippet neutral-line changeProductChallenge
   // app.put('/api/Products/:id', security.isAuthorized()) // vuln-code-snippet vuln-line changeProductChallenge
+  app.post('/api/Products', security.denyAll())
+  app.put('/api/Products/:id', security.denyAll())
   app.delete('/api/Products/:id', security.denyAll())
   /* Challenges: GET list of challenges allowed. Everything else forbidden entirely */
   app.post('/api/Challenges', security.denyAll())
@@ -771,7 +773,7 @@ const Metrics = metrics.observeMetrics() // vuln-code-snippet neutral-line expos
 app.get('/metrics', utils.asyncHandler(metrics.serveMetrics())) // vuln-code-snippet vuln-line exposedMetricsChallenge
 errorhandler.title = `${config.get<string>('application.name')} (Express ${utils.version('express')})`
 
-export async function start (readyCallback?: () => void) {
+export async function start(readyCallback?: () => void) {
   const datacreatorEnd = startupGauge.startTimer({ task: 'datacreator' })
   await sequelize.sync({ force: true })
   await preconditionsReady
@@ -802,7 +804,7 @@ export async function start (readyCallback?: () => void) {
   void collectDurationPromise('customizeEasterEgg', customizeEasterEgg)() // vuln-code-snippet hide-line
 }
 
-export function close (exitCode: number | undefined) {
+export function close(exitCode: number | undefined) {
   if (server) {
     clearInterval(metricsUpdateLoop)
     server.close()
@@ -813,7 +815,7 @@ export function close (exitCode: number | undefined) {
 }
 // vuln-code-snippet end exposedMetricsChallenge
 
-export async function createApp (options?: { inMemoryDb?: boolean }) {
+export async function createApp(options?: { inMemoryDb?: boolean }) {
   const seq = options?.inMemoryDb ? createSequelize({ inMemory: true }) : sequelize
   if (options?.inMemoryDb) {
     initModels(seq)
