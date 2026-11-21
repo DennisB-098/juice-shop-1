@@ -6,7 +6,7 @@
 <main class="center-container">
   <mat-card appearance="outlined" class="mat-elevation-z6 mdc-card">
     <h1 class="mat-headline-medium">{{'TITLE_LOGIN' | translate}}</h1>
-
+    <h1>UPDATED</h1>
     @if (error()) {
     <p class="error" role="alert">{{error()}}</p>
     }
@@ -15,12 +15,8 @@
 
       <mat-form-field color="tertiary" appearance="outline">
         <mat-label>{{'LABEL_EMAIL' | translate}}</mat-label>
-        <input id="email"
-          [formField]="loginForm.email"
-          (focus)="error.set(null)"
-          matInput placeholder=""
-          aria-label="Text field for the login email"
-        >
+        <input id="email" [formField]="loginForm.email" (focus)="error.set(null)" matInput placeholder=""
+          aria-label="Text field for the login email">
         @if (loginForm.email().getError('required')) {
         <mat-error>{{'MANDATORY_EMAIL' | translate}}</mat-error>
         }
@@ -28,17 +24,11 @@
 
       <mat-form-field color="tertiary" appearance="outline">
         <mat-label>{{'LABEL_PASSWORD' | translate}}</mat-label>
-        <input id="password"
-          [formField]="loginForm.password"
-          (focus)="error.set(null)"
-          matInput placeholder="" [type]="hide ? 'password' : 'text'"
-          aria-label="Text field for the login password"
-        >
-        <button type="button" class="password-toggle-button" mat-icon-button matSuffix
-          (click)="hide = !hide"
+        <input id="password" [formField]="loginForm.password" (focus)="error.set(null)" matInput placeholder=""
+          [type]="hide ? 'password' : 'text'" aria-label="Text field for the login password">
+        <button type="button" class="password-toggle-button" mat-icon-button matSuffix (click)="hide = !hide"
           [attr.aria-label]="(hide ? 'SHOW_PWD_TOOLTIP' : 'HIDE_PWD_TOOLTIP') | translate"
-          [matTooltip]="(hide ? 'SHOW_PWD_TOOLTIP' : 'HIDE_PWD_TOOLTIP') | translate"
-          matTooltipPosition="right">
+          [matTooltip]="(hide ? 'SHOW_PWD_TOOLTIP' : 'HIDE_PWD_TOOLTIP') | translate" matTooltipPosition="right">
           <mat-icon>{{ hide ? 'visibility' : 'visibility_off' }}</mat-icon>
         </button>
         @if (loginForm.password().getError('required')) {
@@ -48,21 +38,16 @@
 
       <a class="primary-link forgot-pw" routerLink="/forgot-password">{{'FORGOT_PASSWORD' | translate}}</a>
 
-      <button
-        type="submit"
-        id="loginButton"
-        [disabled]="!loginForm.email().value() || !loginForm.password().value()"
-        mat-raised-button
-        color="primary"
-        aria-label="Login"
-      >
+      <button type="submit" id="loginButton" [disabled]="!loginForm.email().value() || !loginForm.password().value()"
+        mat-raised-button color="primary" aria-label="Login">
         <mat-icon>
           exit_to_app
         </mat-icon>
         {{'BTN_LOGIN' | translate}}
       </button>
 
-      <mat-checkbox [formField]="loginForm.rememberMe" id="rememberMe" aria-label="Checkbox to stay logged in or not logged in">
+      <mat-checkbox [formField]="loginForm.rememberMe" id="rememberMe"
+        aria-label="Checkbox to stay logged in or not logged in">
         {{'REMEMBER_ME' | translate}}
       </mat-checkbox>
 
@@ -77,21 +62,14 @@
       </div>
 
       <div class="alternative-logins">
-        <button type="button" id="loginButtonPasskey"
-          mat-stroked-button color="primary"
-          (click)="passkeyLogin()"
-          aria-label="Login with Passkey"
-        >
+        <button type="button" id="loginButtonPasskey" mat-stroked-button color="primary" (click)="passkeyLogin()"
+          aria-label="Login with Passkey">
           <mat-icon>key</mat-icon> {{'BTN_PASSKEY_LOGIN' | translate}}
         </button>
 
         @if (!oauthUnavailable) {
-        <button type="button" id="loginButtonGoogle"
-          mat-raised-button color="tertiary"
-          (click)="googleLogin()"
-          aria-label="Login with Google"
-          class="google-button"
-        >
+        <button type="button" id="loginButtonGoogle" mat-raised-button color="tertiary" (click)="googleLogin()"
+          aria-label="Login with Google" class="google-button">
           <i class="fab fa-google fa-lg"></i> {{'BTN_GOOGLE_LOGIN' | translate}}
         </button>
         }
