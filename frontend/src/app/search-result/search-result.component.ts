@@ -59,7 +59,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
   public emptyState = false
 
   // vuln-code-snippet start restfulXssChallenge
-  ngAfterViewInit () {
+  ngAfterViewInit() {
     const products = this.productService.search('')
     const quantities = this.quantityService.getAll()
     forkJoin([quantities, products]).subscribe({
@@ -108,7 +108,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
     })
   }
 
-  trustProductDescription (tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge
+  trustProductDescription(tableData: any[]) { // vuln-code-snippet neutral-line restfulXssChallenge
     for (let i = 0; i < tableData.length; i++) { // vuln-code-snippet neutral-line restfulXssChallenge
       tableData[i].description = this.sanitizer.bypassSecurityTrustHtml(tableData[i].description) // vuln-code-snippet vuln-line restfulXssChallenge
     } // vuln-code-snippet neutral-line restfulXssChallenge
@@ -116,7 +116,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
 
   // vuln-code-snippet end restfulXssChallenge
 
-  ngOnDestroy () {
+  ngOnDestroy() {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe()
     }
@@ -135,7 +135,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
   }
 
   // vuln-code-snippet start localXssChallenge xssBonusChallenge
-  filterTable () {
+  filterTable() {
     let queryParam: string = this.route.snapshot.queryParams.q
     if (queryParam) {
       queryParam = queryParam.trim()
@@ -143,7 +143,8 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
         this.io.socket().emit('verifyLocalXssChallenge', queryParam)
       }) // vuln-code-snippet hide-end
       this.dataSource.filter = queryParam.toLowerCase()
-      this.searchValue = this.sanitizer.bypassSecurityTrustHtml(queryParam) // vuln-code-snippet vuln-line localXssChallenge xssBonusChallenge
+      //this.searchValue = this.sanitizer.bypassSecurityTrustHtml(queryParam) // vuln-code-snippet vuln-line localXssChallenge xssBonusChallenge
+      this.searchValue = queryParam
       if (this.gridDataSourceSubscription) {
         this.gridDataSourceSubscription.unsubscribe()
       }
@@ -162,7 +163,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
   }
   // vuln-code-snippet end localXssChallenge xssBonusChallenge
 
-  private setupResponsivePageSize () {
+  private setupResponsivePageSize() {
     const grid = this.elRef.nativeElement.querySelector('.products-grid')
     if (!grid) return
     this.resizeObserver = new ResizeObserver(() => {
@@ -173,7 +174,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
     this.resizeObserver.observe(grid)
   }
 
-  private updatePageSize (grid: Element) {
+  private updatePageSize(grid: Element) {
     const columns = getComputedStyle(grid).gridTemplateColumns.split(' ').length
     const pageSize = Math.ceil(15 / columns) * columns
     if (pageSize !== this.currentPageSize) {
@@ -189,7 +190,7 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
     }
   }
 
-  private updatePageSizeOptions () {
+  private updatePageSizeOptions() {
     this.pageSizeOptions = []
     for (let i = 1; i <= Math.ceil(this.dataSource.data.length / this.currentPageSize); i++) {
       this.pageSizeOptions.push(i * this.currentPageSize)
@@ -197,18 +198,18 @@ export class SearchResultComponent implements OnDestroy, AfterViewInit {
     this.paginator.pageSizeOptions = this.pageSizeOptions
   }
 
-  startHackingInstructor (challengeName: string) {
+  startHackingInstructor(challengeName: string) {
     console.log(`Starting instructions for challenge "${challengeName}"`)
     import('../../hacking-instructor').then(module => {
       module.startHackingInstructorFor(challengeName)
     })
   }
 
-  isLoggedIn (): boolean {
+  isLoggedIn(): boolean {
     return localStorage.getItem('token') !== null
   }
 
-  isDeluxe () {
+  isDeluxe() {
     return this.deluxeGuard.isDeluxe()
   }
 }
